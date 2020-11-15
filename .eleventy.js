@@ -231,6 +231,7 @@ module.exports = function(config) {
 
   // Eleventy configuration
   return {
+	  useGitIgnore: false,
     dir: {
       input: "src",
       output: "dist",
