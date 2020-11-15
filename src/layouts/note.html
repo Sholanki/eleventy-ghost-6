@@ -1,9 +1,14 @@
 ---
-layout: post2
+layout: default
 ---
 <article>
-    {{content}}
+     {% for notes in collections.notes | reverse %}
+    <li>
+      <h3><a href="{{ notes.url | url }}">{{ notes.data.title }}</a> | {{ notes.date }}</h3>
+      {% if notes.data.teaser %}
+        <p>{{ notes.data.teaser }}</p>
+      {% endif %} 
+    </li>
+  {% endfor %}
 </article>
-<hr>
-<p class="backlinks-title larger">Backlinks</p>
- {%  include backlinks.html' %}
+{% include backlinks.html %}
