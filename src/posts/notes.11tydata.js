@@ -8,7 +8,7 @@ function caselessCompare(a, b) {
 }
 
 module.exports = {
-    layout: "layouts/post.njk",
+    layout: "post2.njk",
     type: "note",
     eleventyComputed: {
         title: data => titleCase(data.title || data.page.fileSlug),
