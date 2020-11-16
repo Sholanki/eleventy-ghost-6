@@ -3,9 +3,7 @@
 {% set title = post.title %}
 {% set codeinjection_head = post.codeinjection_head %}
 {% set codeinjection_foot = post.codeinjection_foot %}
-<script src="/notes/notes.11tydata.js">
-    
-</script>
+
 
 {% block content %}
     <article class="content">
@@ -19,7 +17,7 @@
     </li>
   {% endfor %}
 </article>
-{% include 'layouts/backlinks.html' %}
+{% include backlinks.html %}
  
         <section class="post-full-content">
             <h1 class="content-title">{{ title }}</h1>
