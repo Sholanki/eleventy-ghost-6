@@ -21,20 +21,20 @@ const stripDomain = url => {
   return url.replace(process.env.GHOST_API_URL, "");
 };
 
-module.exports = function(config) {
+module.exports = function(eleventyConfig) {
   // Minify HTML
-  config.addTransform("htmlmin", htmlMinTransform);
+  eleventyConfig.addTransform("htmlmin", htmlMinTransform);
 
   // Assist RSS feed template
-  config.addPlugin(pluginRSS);
+  eleventyConfig.addPlugin(pluginRSS);
 
   // Apply performance attributes to images
-  config.addPlugin(lazyImages, {
+  eleventyConfig.addPlugin(lazyImages, {
     cacheFile: ""
   });
 
   // Copy images over from Ghost
-  config.addPlugin(localImages, {
+  eleventyConfig.addPlugin(localImages, {
     distPath: "dist",
     assetPath: "/assets/images",
     selector: "img",
@@ -43,27 +43,27 @@ module.exports = function(config) {
   });
 
   // Inline CSS
-  config.addFilter("cssmin", code => {
+  eleventyConfig.addFilter("cssmin", code => {
     return new cleanCSS({}).minify(code).styles;
   });
 
-  config.addFilter("getReadingTime", text => {
+  eleventyConfig.addFilter("getReadingTime", text => {
     const wordsPerMinute = 200;
     const numberOfWords = text.split(/\s/g).length;
     return Math.ceil(numberOfWords / wordsPerMinute);
   });
 
   // Date formatting filter
-  config.addFilter("htmlDateString", dateObj => {
+  eleventyConfig.addFilter("htmlDateString", dateObj => {
     return new Date(dateObj).toISOString().split("T")[0];
   });
 
   // Don't ignore the same files ignored in the git repo
-  config.setUseGitIgnore(false);
+  eleventyConfig.setUseGitIgnore(false);
 
   // Get all pages, called 'docs' to prevent
   // conflicting the eleventy page object
-  config.addCollection("docs", async function(collection) {
+  eleventyConfig.addCollection("docs", async function(collection) {
     collection = await api.pages
       .browse({
         include: "authors",
@@ -86,7 +86,7 @@ module.exports = function(config) {
   });
 
   // Get all posts
-  config.addCollection("posts", async function(collection) {
+  eleventyConfig.addCollection("posts", async function(collection) {
     collection = await api.posts
       .browse({
         include: "tags,authors",
@@ -112,7 +112,7 @@ module.exports = function(config) {
   });
 
   // Get all authors
-  config.addCollection("authors", async function(collection) {
+  eleventyConfig.addCollection("authors", async function(collection) {
     collection = await api.authors
       .browse({
         limit: "all"
@@ -146,7 +146,7 @@ module.exports = function(config) {
   });
 
   // Get all tags
-  config.addCollection("tags", async function(collection) {
+  eleventyConfig.addCollection("tags", async function(collection) {
     collection = await api.tags
       .browse({
         include: "count.posts",
@@ -181,7 +181,7 @@ module.exports = function(config) {
   });
 
   // Display 404 page in BrowserSnyc
-  config.setBrowserSyncConfig({
+  eleventyConfig.setBrowserSyncConfig({
     callbacks: {
       ready: (err, bs) => {
         const content_404 = fs.readFileSync("dist/404.html");
@@ -217,17 +217,17 @@ module.exports = function(config) {
         })
     })
     
-    config.addFilter("markdownify", string => {
+    eleventyConfig.addFilter("markdownify", string => {
         return md.render(string)
     })
 
-    config.setLibrary('md', md);
+    eleventyConfig.setLibrary('md', md);
     
-    config.addCollection("notes", function (collection) {
+    eleventyConfig.addCollection("notes", function (collection) {
         return collection.getFilteredByGlob(["notes/**/*.md", "index.md"]);
     });
     
-    config.addPassthroughCopy('assets');
+    eleventyConfig.addPassthroughCopy('assets');
 
   // Eleventy configuration
   return {
